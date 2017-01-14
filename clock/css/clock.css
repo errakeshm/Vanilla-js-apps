@@ -1,0 +1,72 @@
+body{
+    background: url('../images/drumRoll.jpg');
+    padding:0px;
+    margin:0px;        
+}
+
+.clockPanel{
+    position:relative;
+    height:80%;
+    width:80%;
+    top:10%;
+    left:20%;
+    /*border:3px solid black;*/
+}
+.clockPanel > #clock1{
+    position:relative;
+    width:500px;
+    height:500px;
+    border-radius:50%;
+    border:20px solid white;
+    box-shadow:0 0 40px white;
+    background-color:rgba(0,0,0,0.5);
+}
+.hour{
+    position:absolute;
+    width: 30%;
+    top:50%;
+    left:50%;
+    -webkit-transform-origin:0%;
+    border: 2px solid white;
+    box-shadow:0 0 10px white;
+}
+.min{
+    position:absolute;
+    width: 40%;
+    top:50%;
+    left:50%;
+    border: 2px solid green;
+    -webkit-transform-origin:0%;
+    box-shadow:0 0 10px green;
+}
+.sec{
+    position:absolute;
+    width: 40%;
+    top:50%;
+    left:50%;
+    border: 2px solid red;
+    -webkit-transform-origin:0%;
+    box-shadow:0 0 10px red;
+}
+
+.rotateHour
+{
+    -webkit-transform:rotate(30deg);
+}
+.rotateOther
+{
+    -webkit-transform:rotate(6deg);
+}
+.numbers{
+    position:absolute;
+    top:4%;
+    left:48%;
+    font-size:20px;
+    font-family:sans-serif;
+    color:white;
+}
+.glow{
+    font-size:30px;
+    font-weight:bold;
+    text-shadow:2px 2px 10px yellow;
+}
