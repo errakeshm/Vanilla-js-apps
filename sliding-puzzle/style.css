@@ -9,7 +9,9 @@
     top:10%;
     left:30%;
     border-radius: 2px;
-	box-shadow: 4px 8px 16px 0 rgba(0,0,0,0.1);
+	-webkit-box-shadow: -1px -1px 24px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: -1px -1px 24px 0px rgba(0,0,0,0.75);
+    box-shadow: -1px -1px 24px 0px rgba(0,0,0,0.75);
 	overflow: hidden;
     background: #fff;
     color: #333;
@@ -36,9 +38,13 @@
     background: linear-gradient(to bottom,  #f6e6b4 0%,#ed9017 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6e6b4', endColorstr='#ed9017',GradientType=0 ); /* IE6-9 */
 
-    border:1px solid white;
+    border:2px solid white;
     text-align: center;
     display: inline-block;
     position:absolute;
     vertical-align: middle;
+}
+
+.element:hover{
+    cursor:pointer;
 }
