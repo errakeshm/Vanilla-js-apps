@@ -2,8 +2,10 @@
 (function(){
     const Utility ={
         generateRandom:function(size,end){
-            let arr =  Array.apply(null,{length:size}).map(Number.call,Number).map(n=>n+1);
-            arr[size]=null;
+            let arr =  Array.apply(null,{length:size+1}).map(Number.call,Number).map(n=>n+1);
+            arr[size+1]=null;
+            console.log(arr);
+            return arr;
         },
         shuffleArray:function(array,size){
             for(let i=0;i<size;i++){
@@ -48,22 +50,22 @@
         problem.setHole();
 
         //construct the divs
-        for(let i =0;i<problem.problemSize;i++){
+        for(let i =0;i<=problem.problemSize;i++){
             let xPos = i%size;
             let yPos = Math.floor(i/size);
             let initial = yPos*size;
             let maximum = initial+size;
 
-            if(problem.currentHolePosition==i){
-
-            }
             let div = document.createElement('div');
-            div.classList.add('element');
-            div.style.transform=`translate(${xPos*problem.eachElementSize}px,${yPos*problem.eachElementSize}px)`;
             div.style.height=div.style.width=`${problem.eachElementSize}px`;
-            div.style.lineHeight=`${problem.eachElementSize-5}px`
-            div.innerHTML = problem.entries[i];
-            puzzleDiv.append(div);
+            div.style.transform=`translate(${xPos*problem.eachElementSize}px,${yPos*problem.eachElementSize}px)`;
+            if(problem.currentHolePosition!=i){
+                div.classList.add('element');
+                div.style.lineHeight=`${problem.eachElementSize-5}px`
+                div.innerHTML = problem.entries[i];
+                puzzleDiv.append(div);
+            }
+            
         }
 
         //find random position
