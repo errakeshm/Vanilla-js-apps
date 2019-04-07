@@ -81,11 +81,42 @@
                 div.addEventListener('click',function(event){
                     let targetDiv = event.target;
                     let currPosition = targetDiv.getAttribute('position');
-                    if(currPosition-1==problem.setHole){
-                        
+                    let location = -1;
+                    let direction='NA';
+                    if(currPosition-1==problem.currentHolePosition){
+                        location = currPosition-1;
+                        direction='L';
+                    }else if(currPosition+1==problem.currentHolePosition){
+                        location = currPosition+1;
+                        direction='R';
+                    }else if(currPosition-problem.problemSize==problem.currentHolePosition){
+                        location = currPosition-problem.problemSize;
+                        direction='U';
+                    }else if(currPosition+problem.problemSize==problem.currentHolePosition){
+                        location = currPosition+problem.problemSize;
+                        direction='D'
                     }
-                    if(!problem.checkIfSet()){
+                    console.log(currPosition,direction,problem.currentHolePosition);
+                    if(direction!='NA'){
+                        let temp = problem.entries[location];
+                        problem.entries[location] = problem.entries[problem.currentHolePosition];
+                        problem.entries[problem.currentHolePosition]=temp;
+                        
+                        if(direction=='L'){
+                            let prevDiv = div.previousSibling;
+                            div.previousSibling = div;
+                            div=prevDiv;
+                        }
+                        else if(direction=='R'){
+                            let prevDiv = div.nextSibling;
+                            div.nextSibling = div;
+                            div=prevDiv;
+                        }
+                        problem.currentHolePosition = currPosition;
+                    }
 
+                    if(problem.checkIfSet()){
+                        console.log('done');
                     }
                 });
             }   
