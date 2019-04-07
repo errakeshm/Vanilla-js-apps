@@ -38,21 +38,27 @@
         problem.shuffleArray();
 
         let puzzleDiv = document.getElementsByClassName('puzzle')[0];
-        puzzleDiv.style.height=puzzleDiv.style.width=`${(size*(problem.eachElementSize))}px`;
-        console.log(puzzleDiv.style.height);
+        puzzleDiv.style.height=puzzleDiv.style.width=`${(size*(problem.eachElementSize))+20}px`;
+        
+        //Set the random hole
+        problem.setHole();
 
         //construct the divs
         for(let i =0;i<problem.problemSize;i++){
+            let xPos = i%size;
+            let yPos = Math.floor(i/size);
+            
             let div = document.createElement('div');
             div.classList.add('element');
-            let xPos = i%size;
-            div.style.transform=`translateY(${(xPos)})`;
+            div.style.transform=`translate(${xPos*problem.eachElementSize}px,${yPos*problem.eachElementSize}px)`;
+            div.style.height=div.style.width=`${problem.eachElementSize}px`;
+            div.style.lineHeight=`${problem.eachElementSize-5}px`
             div.innerHTML = problem.entries[i];
             puzzleDiv.append(div);
         }
 
         //find random position
-        problem.setHole();
+       
         console.log(problem.currentHolePosition);
 
         //place the elements
