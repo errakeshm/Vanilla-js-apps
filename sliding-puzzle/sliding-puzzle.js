@@ -3,19 +3,44 @@
     const Utility ={
         generateRandom:function(size){
             let arr =  Array.apply(null,{length:size+1}).map(Number.call,Number).map(n=>n+1);
-            arr[size+1]=null;
+            arr[size]=null;
             console.log(arr);
             return arr;
         },
-        shuffleArray:function(array,size){
+        checkFeasibility:function(array,size,rowSize){
+            let count = 0;
             for(let i=0;i<size;i++){
-                let tempIndex = Math.floor(Math.random()*size);
-                let tempValue = array[tempIndex];
-                array[tempIndex]=array[i];
-                array[i]=tempValue;
+                let y = i%rowSize;
+                let x = Math.floor(i/rowSize);
+                console.log(x,y,y*rowSize+x,i);
+                if(y*rowSize+x!=i && array[i]!=null && array[y*rowSize+x]!=null && array[y*rowSize+x]>array[i]){
+                    count++;
+                }
+            }
+            console.log(count);
+            if(count%2==0){
+                console.log('Not possible');
+                return false;
+            }
+            return true;
+        },
+        shuffleArray:function(array,size,rowSize){
+            let flag=false;
+            let count=0;
+            console.log(array);
+            while(flag==false && count<=10){
+                for(let i=0;i<size;i++){
+                    let tempIndex = Math.floor(Math.random()*size);
+                    let tempValue = array[tempIndex];
+                    array[tempIndex]=array[i];
+                    array[i]=tempValue;
+                }
+                flag = this.checkFeasibility(array,size,rowSize);
+                count++;
             }
             return array;
         }
+        
      }
      class Problem{
         constructor(size){
@@ -28,7 +53,7 @@
             console.log(this.rowSize)
         }
         shuffleArray(){
-            this.entries = Utility.shuffleArray(this.entries,this.problemSize);
+            this.entries = Utility.shuffleArray(this.entries,this.problemSize,this.rowSize);
         }
         setHole(){
             this.currentHolePosition = Math.floor(Math.random()*this.problemSize);
@@ -45,6 +70,7 @@
             return true;
         }
         swapWithHole(location){
+            console.log(location,this.currentHolePosition);
             let temp = this.entries[location];
             this.entries[location] = this.entries[this.currentHolePosition];
             this.entries[this.currentHolePosition]=temp;
@@ -110,7 +136,7 @@
                     }
                     //console.log(currPosition,direction,problem.currentHolePosition,problem.rowSize);
                     if(direction!='NA'){
-                       problem.swapWithHole(location);
+                       problem.swapWithHole(currPosition);
                        let xPos = location%problem.rowSize;
                        let yPos = Math.floor(location/problem.rowSize);
                        div.setAttribute('position',location);
