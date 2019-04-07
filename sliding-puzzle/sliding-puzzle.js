@@ -16,7 +16,7 @@
             }
             return array;
         }
-    }
+     }
      class Problem{
         constructor(size){
             this.problemSize = size;
@@ -35,6 +35,7 @@
         }
     }
     document.getElementById("clickme").addEventListener('click',function(event){
+        
         let size = event.target.parentNode.querySelector("#input-size").value;
 
         //Define the problem
@@ -44,7 +45,8 @@
         problem.shuffleArray();
 
         let puzzleDiv = document.getElementsByClassName('puzzle')[0];
-        puzzleDiv.style.height=puzzleDiv.style.width=`${(size*(problem.eachElementSize))+20}px`;
+        puzzleDiv.innerHTML='';
+        puzzleDiv.style.height=puzzleDiv.style.width=`${(size*(problem.eachElementSize))}px`;
         
         //Set the random hole
         problem.setHole();
@@ -67,13 +69,6 @@
             }
             
         }
-
-        //find random position
-       
-        console.log(problem.currentHolePosition);
-
-        //place the elements
-
 
     });
 })();
