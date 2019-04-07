@@ -2,7 +2,8 @@
 (function(){
     const Utility ={
         generateRandom:function(size,end){
-            return Array.apply(null,{length:size}).map(Number.call,Number).map(n=>n+1);
+            let arr =  Array.apply(null,{length:size}).map(Number.call,Number).map(n=>n+1);
+            arr[size]=null;
         },
         shuffleArray:function(array,size){
             for(let i=0;i<size;i++){
@@ -26,6 +27,9 @@
         }
         setHole(){
             this.currentHolePosition = Math.floor(Math.random()*this.problemSize);
+            let temp = this.entries[this.currentHolePosition];
+            this.entries[this.currentHolePosition]=this.entries[this.problemSize];
+            this.entries[this.problemSize]=temp;
         }
     }
     document.getElementById("clickme").addEventListener('click',function(event){
@@ -47,7 +51,12 @@
         for(let i =0;i<problem.problemSize;i++){
             let xPos = i%size;
             let yPos = Math.floor(i/size);
-            
+            let initial = yPos*size;
+            let maximum = initial+size;
+
+            if(problem.currentHolePosition==i){
+
+            }
             let div = document.createElement('div');
             div.classList.add('element');
             div.style.transform=`translate(${xPos*problem.eachElementSize}px,${yPos*problem.eachElementSize}px)`;
