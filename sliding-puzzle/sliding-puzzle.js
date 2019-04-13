@@ -39,6 +39,11 @@
                 count++;
             }
             return array;
+        },
+        returnXYCoordinates(location,rowSize){
+            let xPos = location%rowSize;
+            let yPos = Math.floor(location/rowSize);
+            return [xPos,yPos];
         }
         
      }
@@ -49,7 +54,8 @@
             this.entries=Utility.generateRandom(this.problemSize);
             this.currentHolePosition = null;
             this.eachElementSize = 50;
-           
+            this.solved = false;
+            this.holeDiv = null;
             console.log(this.rowSize)
         }
         shuffleArray(){
@@ -67,18 +73,32 @@
                     return false;
                 }
             }
+            this.solved = true;
             return true;
         }
         swapWithHole(location){
-            console.log(location,this.currentHolePosition);
             let temp = this.entries[location];
             this.entries[location] = this.entries[this.currentHolePosition];
             this.entries[this.currentHolePosition]=temp;
+        }
+        setElementSize(div,xPos,yPos){
+            div.style.height=div.style.width=`${this.eachElementSize}px`;
+            div.style.transform=`translate(${xPos*this.eachElementSize}px,${yPos*this.eachElementSize}px)`;
+            return div;
+        }
+        translateElement(div,xPos,yPos){
+            div.style.transform=`translate(${xPos*this.eachElementSize}px,${yPos*this.eachElementSize}px)`;
+            return div;
+        }
+        translateHole(xPos,yPos){
+            this.holeDiv.style.transform=`translate(${xPos*this.eachElementSize}px,${yPos*this.eachElementSize}px)`;
         }
     }
     document.getElementById("clickme").addEventListener('click',function(event){
         
         let size = event.target.parentNode.querySelector("#input-size").value;
+        document.querySelector('.center').classList.remove('solved');
+        let puzzleDiv = document.getElementsByClassName('puzzle')[0];
 
         //Define the problem
         let problem = new Problem(size);
@@ -86,7 +106,7 @@
         //shuffle the array
         problem.shuffleArray();
 
-        let puzzleDiv = document.getElementsByClassName('puzzle')[0];
+        
         puzzleDiv.innerHTML='';
         puzzleDiv.style.height=puzzleDiv.style.width=`${(problem.rowSize*(problem.eachElementSize))}px`;
         
@@ -101,8 +121,8 @@
             let maximum = initial+problem.rowSize;
 
             let div = document.createElement('div');
-            div.style.height=div.style.width=`${problem.eachElementSize}px`;
-            div.style.transform=`translate(${xPos*problem.eachElementSize}px,${yPos*problem.eachElementSize}px)`;
+            div = problem.setElementSize(div,xPos,yPos);
+
             
             if(problem.currentHolePosition!=i){
                 div.classList.add('element');
@@ -113,42 +133,55 @@
 
                 //Attach events
                 div.addEventListener('click',function(event){
-                    let targetDiv = event.target;
-                    let currPosition = Number.parseInt(targetDiv.getAttribute('position'));
-                    let location = -1;
-                    let direction='NA';
-                    console.log(currPosition+1,direction,problem.currentHolePosition);
-                    if((currPosition-1)===problem.currentHolePosition){
-                        location = currPosition-1;
-                        direction='L';
-                    }else if((currPosition+1)===problem.currentHolePosition){
-                        location = currPosition+1;
-                        direction='R';
-                    }else if((currPosition-problem.rowSize)===problem.currentHolePosition){
-                        console.log('upper');
-                        location = currPosition-problem.rowSize;
-                        direction='U';
-                    }else if((currPosition+problem.rowSize)===problem.currentHolePosition){
-                        location = currPosition+problem.rowSize;
-                        direction='D'
-                    }else{
-                        console.log('others');
-                    }
-                    //console.log(currPosition,direction,problem.currentHolePosition,problem.rowSize);
-                    if(direction!='NA'){
-                       problem.swapWithHole(currPosition);
-                       let xPos = location%problem.rowSize;
-                       let yPos = Math.floor(location/problem.rowSize);
-                       div.setAttribute('position',location);
-                       div.style.transform=`translate(${xPos*problem.eachElementSize}px,${yPos*problem.eachElementSize}px)`;
-                       problem.currentHolePosition = currPosition;
-                       console.log(problem.entries);
-                    }
+                    if(!problem.solved){
+                        let targetDiv = event.target;
+                        let currPosition = Number.parseInt(targetDiv.getAttribute('position'));
+                        let location = -1;
+                        let direction='NA';
+                        console.log(currPosition+1,direction,problem.currentHolePosition);
+                        if((currPosition-1)===problem.currentHolePosition){
+                            location = currPosition-1;
+                            direction='L';
+                        }else if((currPosition+1)===problem.currentHolePosition){
+                            location = currPosition+1;
+                            direction='R';
+                        }else if((currPosition-problem.rowSize)===problem.currentHolePosition){
+                            console.log('upper');
+                            location = currPosition-problem.rowSize;
+                            direction='U';
+                        }else if((currPosition+problem.rowSize)===problem.currentHolePosition){
+                            location = currPosition+problem.rowSize;
+                            direction='D'
+                        }else{
+                            console.log('others');
+                        }
+                        //console.log(currPosition,direction,problem.currentHolePosition,problem.rowSize);
+                        if(direction!='NA'){
+                            problem.swapWithHole(currPosition);
+                            //let xPos = location%problem.rowSize;
+                            //let yPos = Math.floor(location/problem.rowSize);
+                            let [xPos,yPos] = Utility.returnXYCoordinates(location,problem.rowSize);
+                            div.setAttribute('position',location);
+                            //div.style.transform=`translate(${xPos*problem.eachElementSize}px,${yPos*problem.eachElementSize}px)`;
+                            div = problem.translateElement(div,xPos,yPos);
+                            
+                            let [xHole,yHole] = Utility.returnXYCoordinates(currPosition,problem.rowSize);
+                            problem.translateHole(xHole,yHole);
 
-                    if(problem.checkIfSet()){
-                        console.log('done');
+                            problem.currentHolePosition = currPosition;
+                        }
+
+                        if(problem.checkIfSet()){
+                            document.querySelector('.center').classList.add('solved');
+                        }
                     }
                 });
+            }else{
+                div.classList.add('hole');
+                div.style.lineHeight=`${problem.eachElementSize-5}px`;
+                problem.holeDiv = div;
+                puzzleDiv.append(div);
+                console.log(this.holeDiv);
             }   
         }
     });

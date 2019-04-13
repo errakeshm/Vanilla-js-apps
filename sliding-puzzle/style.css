@@ -29,8 +29,14 @@
     height: 450px;
     background-color: teal;
 }
+.hole{
+    border:1px solid white;
+    display: inline-block;
+    position:absolute;
+    background-color: teal;
+}
 .element{
-    color:white;
+    color:teal;
     
     background: #f6e6b4; /* Old browsers */
     background: -moz-linear-gradient(top,  #f6e6b4 0%, #ed9017 100%); /* FF3.6-15 */
@@ -38,7 +44,7 @@
     background: linear-gradient(to bottom,  #f6e6b4 0%,#ed9017 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6e6b4', endColorstr='#ed9017',GradientType=0 ); /* IE6-9 */
 
-    border:2px solid white;
+    border:1px solid white;
     text-align: center;
     display: inline-block;
     position:absolute;
@@ -47,4 +53,20 @@
 
 .element:hover{
     cursor:pointer;
+}
+
+.solved{
+    animation: blink-green 2s ease-in-out infinite;
+}
+@keyframes blink-green{
+    from{
+        -webkit-box-shadow: -1px -1px 24px 0px rgba(0,0,0,0.75);
+        -moz-box-shadow: -1px -1px 24px 0px rgba(0,0,0,0.75);
+        box-shadow: -1px -1px 24px 0px rgba(0,0,0,0.75);
+    }
+    to{
+        -webkit-box-shadow: -1px -1px 24px 0px rgba(34,139,34,0.75);
+        -moz-box-shadow: -1px -1px 24px 0px rgba(34,139,34,0.75);
+        box-shadow: -1px -1px 24px 0px rgba(34,139,34,0.75);
+    }
 }
