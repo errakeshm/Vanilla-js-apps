@@ -24,7 +24,7 @@
     padding: 10px;
 }
 .puzzle{
-    margin-top: 10px;
+    margin-top: 40px;
     width: 450px;
     height: 450px;
     background-color: teal;
@@ -69,4 +69,14 @@
         -moz-box-shadow: -1px -1px 24px 0px rgba(34,139,34,0.75);
         box-shadow: -1px -1px 24px 0px rgba(34,139,34,0.75);
     }
+}
+.error{
+    color:red;
+    float:right;
+    margin-top :10px;
+}
+.success{
+    color:rgba(34,139,34);
+    float:right;
+    margin-top :10px;
 }

@@ -1,6 +1,7 @@
 
 (function(){
     const Utility ={
+        MAXSIZE:8,
         generateRandom:function(size){
             let arr =  Array.apply(null,{length:size+1}).map(Number.call,Number).map(n=>n+1);
             arr[size]=null;
@@ -17,7 +18,6 @@
                     count++;
                 }
             }
-            console.log(count);
             if(count%2==0){
                 console.log('Not possible');
                 return false;
@@ -49,14 +49,20 @@
      }
      class Problem{
         constructor(size){
+            this.resultDiv = null;
+            this.puzzleDiv = null;
+            this.centerDiv = null;
+            this.holeDiv = null;
+            this.init();
+        }
+        setSize(size){
             this.problemSize = size*size-1;
             this.rowSize=Number.parseInt(size);
             this.entries=Utility.generateRandom(this.problemSize);
             this.currentHolePosition = null;
             this.eachElementSize = 50;
             this.solved = false;
-            this.holeDiv = null;
-            console.log(this.rowSize)
+            this.reset();
         }
         shuffleArray(){
             this.entries = Utility.shuffleArray(this.entries,this.problemSize,this.rowSize);
@@ -93,22 +99,47 @@
         translateHole(xPos,yPos){
             this.holeDiv.style.transform=`translate(${xPos*this.eachElementSize}px,${yPos*this.eachElementSize}px)`;
         }
+        init(){
+            this.resultDiv = document.querySelector('.result');
+            this.puzzleDiv = document.getElementsByClassName('puzzle')[0];
+            this.centerDiv = document.querySelector('.center');
+        }
+        reset(){
+            this.centerDiv.classList.remove('solved');
+            this.puzzleDiv.innerHTML='';
+            this.puzzleDiv.style.height=this.puzzleDiv.style.width=`${(this.rowSize*(this.eachElementSize))}px`;
+            this.resultDiv.innerHTML = '';
+        }
+        setResultMessage(text,styleClass,removeClass){
+            this.resultDiv.innerHTML = text;
+            this.resultDiv.classList.add(styleClass);
+            if(removeClass!=null){
+                this.resultDiv.classList.remove(removeClass);
+            }
+
+            if(styleClass=='success'){
+                this.centerDiv.classList.add('solved');
+            }
+            
+        }
     }
     document.getElementById("clickme").addEventListener('click',function(event){
         
+        let problem = new Problem();
         let size = event.target.parentNode.querySelector("#input-size").value;
-        document.querySelector('.center').classList.remove('solved');
-        let puzzleDiv = document.getElementsByClassName('puzzle')[0];
+        //document.querySelector('.center').classList.remove('solved');
 
         //Define the problem
-        let problem = new Problem(size);
-
+        if(size > Utility.MAXSIZE){
+            problem.setResultMessage(`Cannot exceed size : ${Utility.MAXSIZE}`,'error','success')
+            return false;
+        }else{
+            problem.setSize(size);
+            
+        }
+       
         //shuffle the array
         problem.shuffleArray();
-
-        
-        puzzleDiv.innerHTML='';
-        puzzleDiv.style.height=puzzleDiv.style.width=`${(problem.rowSize*(problem.eachElementSize))}px`;
         
         //Set the random hole
         problem.setHole();
@@ -129,7 +160,7 @@
                 div.setAttribute('position',i);
                 div.style.lineHeight=`${problem.eachElementSize-5}px`;
                 div.innerHTML = problem.entries[i];
-                puzzleDiv.append(div);
+                problem.puzzleDiv.append(div);
 
                 //Attach events
                 div.addEventListener('click',function(event){
@@ -172,7 +203,7 @@
                         }
 
                         if(problem.checkIfSet()){
-                            document.querySelector('.center').classList.add('solved');
+                            problem.setResultMessage('Problem Solved. Try a new Pattern','success','error');
                         }
                     }
                 });
@@ -180,8 +211,7 @@
                 div.classList.add('hole');
                 div.style.lineHeight=`${problem.eachElementSize-5}px`;
                 problem.holeDiv = div;
-                puzzleDiv.append(div);
-                console.log(this.holeDiv);
+                problem.puzzleDiv.append(div);
             }   
         }
     });
