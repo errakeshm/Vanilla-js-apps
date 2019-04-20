@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Rock+Salt');
+
 .container{
     margin:0px;
     padding:0px;
@@ -15,10 +17,37 @@
 	overflow: hidden;
     background: #fff;
     color: #333;
-	font-family: 'Open Sans', Helvetica, sans-serif;
+	font-family: 'Rock Salt', cursive;
 	-webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-size:12px;
+    font-weight: bold;
    
+}
+button{
+    font-family: inherit;
+    background-color: white;
+    font-size: 1em;
+    border:none;
+    border-radius: 4px;
+    padding: 2px;
+    left: 5%;
+}
+button:hover{
+    cursor: pointer;
+}
+button:active{
+    background-color: orange;
+    border:none;
+}
+input[type="text"]{
+    font-family: inherit;
+    border: 1px solid;
+    border-radius: 4px;
+    font-size: 1em;
+    width: 100px;
+    padding-left: 10px;
+    border: 1px solid;
 }
 .center{
     padding: 10px;
@@ -76,7 +105,7 @@
     margin-top :10px;
 }
 .success{
-    color:rgba(34,139,34);
+    color:green;
     float:right;
     margin-top :10px;
 }
