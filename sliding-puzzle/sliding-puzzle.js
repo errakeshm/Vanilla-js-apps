@@ -5,7 +5,7 @@
         generateRandom:function(size){
             let arr =  Array.apply(null,{length:size+1}).map(Number.call,Number).map(n=>n+1);
             arr[size]=null;
-            console.log(arr);
+            //console.log(arr);
             return arr;
         },
         checkFeasibility:function(array,size,rowSize){
@@ -13,13 +13,12 @@
             for(let i=0;i<size;i++){
                 let y = i%rowSize;
                 let x = Math.floor(i/rowSize);
-                console.log(x,y,y*rowSize+x,i);
+                //console.log(x,y,y*rowSize+x,i);
                 if(y*rowSize+x!=i && array[i]!=null && array[y*rowSize+x]!=null && array[y*rowSize+x]>array[i]){
                     count++;
                 }
             }
             if(count%2==0){
-                console.log('Not possible');
                 return false;
             }
             return true;
@@ -27,7 +26,7 @@
         shuffleArray:function(array,size,rowSize){
             let flag=false;
             let count=0;
-            console.log(array);
+            //console.log(array);
             while(flag==false && count<=10){
                 for(let i=0;i<size;i++){
                     let tempIndex = Math.floor(Math.random()*size);
@@ -169,7 +168,7 @@
                         let currPosition = Number.parseInt(targetDiv.getAttribute('position'));
                         let location = -1;
                         let direction='NA';
-                        console.log(currPosition+1,direction,problem.currentHolePosition);
+                        //console.log(currPosition+1,direction,problem.currentHolePosition);
                         if((currPosition-1)===problem.currentHolePosition){
                             location = currPosition-1;
                             direction='L';
@@ -177,14 +176,11 @@
                             location = currPosition+1;
                             direction='R';
                         }else if((currPosition-problem.rowSize)===problem.currentHolePosition){
-                            console.log('upper');
                             location = currPosition-problem.rowSize;
                             direction='U';
                         }else if((currPosition+problem.rowSize)===problem.currentHolePosition){
                             location = currPosition+problem.rowSize;
                             direction='D'
-                        }else{
-                            console.log('others');
                         }
                         //console.log(currPosition,direction,problem.currentHolePosition,problem.rowSize);
                         if(direction!='NA'){
