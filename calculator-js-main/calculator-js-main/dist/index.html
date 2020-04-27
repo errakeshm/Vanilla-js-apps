@@ -1,0 +1,35 @@
+<html>
+    <head><title>Calculator Widget</title></head>
+    <body style="min-height:800px;min-width:1024px;">
+        <h1>Testing Calculator Widget</h1>
+        <button id="calcTrigger" onclick="toggleCalculator(event)">Click Me !</button>
+        <script>
+            function toggleCalculator(event){
+                console.log(event.target.id)
+                if(document.getElementsByClassName("calculator").length==0){
+                    let calcDiv = document.createElement("div");
+                    calcDiv.classList=["calculator"];
+                    document.getElementById(event.target.id).parentNode.appendChild(calcDiv);
+                    app(window);
+                }else{
+                    console.log("No");
+                    document.getElementsByClassName("calculator")[0].remove();
+                }
+            };
+            (function(window,document,scriptTagName,globalName,scriptAddress, scriptElement, otherScriptElement){
+                window['calculator'] = globalName;
+                
+                window[globalName] = window[globalName] || function(){
+                    (window[globalName].q = window[globalName].q || []).push(arguments);
+                };
+                window[globalName].l = 1* new Date();
+                scriptElement = document.createElement(scriptTagName);
+                otherScriptElement = document.getElementsByTagName(scriptTagName)[0];
+                scriptElement.async = 1;
+                scriptElement.src = scriptAddress;
+
+                otherScriptElement.parentNode.insertBefore(scriptElement, otherScriptElement);
+            })(window,document,'script','app','./calculator-widget.js');
+        </script>
+    </body>
+</html>

@@ -1,0 +1,24 @@
+<html>
+    <head><title>Calculator Widget</title></head>
+    <body style="min-height:800px;min-width:1024px;">
+        <h1>Testing Calculator Widget</h1>
+        <div class="calculator"></div>
+        <script>
+            (function(window,document,scriptTagName,globalName,scriptAddress, scriptElement, otherScriptElement){
+                window['calculator'] = globalName;
+                console.log(window['calculator']);
+                window[globalName] = window[globalName] || function(){
+                    (window[globalName].q = window[globalName].q || []).push(arguments);
+                };
+                window[globalName].l = 1* new Date();
+                scriptElement = document.createElement(scriptTagName);
+                otherScriptElement = document.getElementsByTagName(scriptTagName)[0];
+                scriptElement.async = 1;
+                scriptElement.src = scriptAddress;
+
+                otherScriptElement.parentNode.insertBefore(scriptElement, otherScriptElement);
+            })(window,document,'script','app','./calculator-widget.js');
+            app();
+        </script>
+    </body>
+</html>

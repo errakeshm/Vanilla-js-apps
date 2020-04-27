@@ -1,0 +1,26 @@
+# compiled output
+#/dist
+
+# dependencies
+/node_modules
+
+# IDEs and editors
+.vscode/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+npm-debug.log
+
+# System Files
+Thumbs.db
