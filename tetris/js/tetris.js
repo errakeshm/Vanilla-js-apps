@@ -16,8 +16,14 @@ const Type = {
 
 const Configuration = {
     MATRIX_SIZE: 3,
-    GAME_MATRIX_SIZE: 20,
+    GAME_MATRIX_SIZE: 40,
     BLOCK_HEIGHT: 10
+}
+
+const KeyCodes = {
+    LEFT_ARROW: 37,
+    RIGHT_ARROW :39,
+    DOWN_ARROW : 40
 }
 
 const GameConfiguration = {
@@ -97,9 +103,16 @@ class Game {
     }
     matrix = [];
     score = 0;
-    initialized = false;
     ctx = null;
+    posX = 0;
+    posY = (Math.floor(Configuration.GAME_MATRIX_SIZE / 2));
+    gameInterval = null;
+    buttonPressed = false;
+    currentElement = null;
 
+    isButtonPressed(){
+        return this.buttonPressed;
+    }
     init() {
 
         let pMatrix = new Array(Configuration.GAME_MATRIX_SIZE);
@@ -127,15 +140,45 @@ class Game {
         this.play(element);
     }
 
-    play(element, posX = 1, posY = (Math.floor(Configuration.GAME_MATRIX_SIZE / 2))) {
-        setInterval(() => {
-            posX++;
-            this.draw(element, posX, posY);
-            if (this.hasReachedBottom(element, posX, posY)) {
-                posX = 1;
-                posY = (Math.floor(Configuration.GAME_MATRIX_SIZE / 2));
-            }
-        }, 500);
+    resume(){
+        this.buttonPressed = false;
+        this.play(this.currentElement);
+    }
+
+    play(element) {
+        this.currentElement = element;
+        this.gameInterval = setInterval(() => {
+            this.posX++;
+            this.moveElement(element, 'ArrowDown');
+        }, 1000);
+    }
+
+    clear(){
+        window.clearInterval(this.gameInterval);
+    }
+
+    moveLeft(){
+        this.buttonPressed = true;
+        if(this.posY > 0){
+            this.posY--;
+            this.moveElement(this.currentElement,'ArrowLeft');
+        }
+    }
+
+    moveRight(){
+        this.buttonPressed = true;
+        if(this.posY <= Configuration.GAME_MATRIX_SIZE-Configuration.MATRIX_SIZE){
+            this.posY++;
+            this.moveElement(this.currentElement,'ArrowRight');
+        }
+    }
+
+    moveDown(){
+        this.buttonPressed = true;
+        if(this.posX <= Configuration.GAME_MATRIX_SIZE){
+            this.posX++;
+            this.moveElement(this.currentElement, 'ArrowDown');
+        }
     }
 
     hasReachedBottom(element, posX, posY) {
@@ -144,9 +187,7 @@ class Game {
             return true;
         } else {
             let collisionArray = new Array(Configuration.MATRIX_SIZE);
-            for (let i = 0; i < Configuration.MATRIX_SIZE; i++) {
-                collisionArray[i] = [-1, -1];
-            }
+            collisionArray.fill([-1,-1],0,Configuration.MATRIX_SIZE);
 
             for (let i = 0; i < Configuration.MATRIX_SIZE; i++) {
                 for (let j = 0; j < Configuration.MATRIX_SIZE; j++) {
@@ -157,6 +198,7 @@ class Game {
                     }
                 }
             }
+            console.log(collisionArray)
             for (let i=0; i< collisionArray.length; i++) {
                 let index = collisionArray[i];
                 if ( index[0] !== -1 && index[1] !== -1 && this.matrix[posX+index[0]+1][posY+index[1]] !== 0 ) {
@@ -164,30 +206,43 @@ class Game {
                 }
             }
         }
-        console.log('not reached')
         return false;
     }
 
-    draw(element, posX, posY) {
+    moveElement(element, direction){
+        this.draw(element, this.posX, this.posY, direction);
+            if (this.hasReachedBottom(element, this.posX, this.posY)) {
+                this.posX = 1;
+                this.posY = (Math.floor(Configuration.GAME_MATRIX_SIZE / 2));
+            }
+    }
+    draw(element, posX, posY , direction) {
         let maxPosY = posY + Configuration.MATRIX_SIZE;
         let maxPosX = posX + Configuration.MATRIX_SIZE;
         let sqI = 0, sqJ = 0;
-        this.clearMatrix(posX, posY, maxPosX, maxPosY);
+        this.clearMatrix(posX, posY, maxPosX, maxPosY, direction);
         for (let i = posX; i < maxPosX; i++, sqI++) {
             sqJ = 0;
             for (let j = posY; j < maxPosY; j++, sqJ++) {
-                this.matrix[i][j] = element.matrix[sqI][sqJ];
+                    this.matrix[i][j] = element.matrix[sqI][sqJ];
             }
         }
         this.ctx.clearRect(0, 0, Configuration.GAME_MATRIX_SIZE * Configuration.BLOCK_HEIGHT, Configuration.GAME_MATRIX_SIZE * Configuration.BLOCK_HEIGHT);
         this.paint(element, posX, posY);
     }
 
-    clearMatrix(posX, posY, maxPosX, maxPosY) {
+
+    clearMatrix(posX, posY, maxPosX, maxPosY, direction) {
+        console.log(direction)
         for (let i = 0; i < maxPosX; i++) {
             for (let j = 0; j < Configuration.GAME_MATRIX_SIZE; j++) {
-                if ((i >= 0 && i < posX && j >= 0 && j < Configuration.GAME_MATRIX_SIZE)
-                    || (i >= posX && i <= maxPosX && ((j >= 0 && j < posY) || (j >= maxPosY && j < Configuration.GAME_MATRIX_SIZE)))) {
+                if ( (direction == 'ArrowDown' && (i >= posX-2 && i<posX && j>=posY && j<=maxPosY))
+                        || (direction == 'ArrowRight' && (i >= posX && i<maxPosX && j>=posY-2 && j<maxPosY))
+                        || (direction == 'ArrowLeft' && (i >= posX && i<maxPosX && j>=maxPosY-2 && j>=maxPosY))
+                        
+                    //(i >= 0 && i < posX && j >= 0 && j < Configuration.GAME_MATRIX_SIZE)
+                   // || (i >= posX && i <= maxPosX && ((j >= 0 && j < posY) || (j >= maxPosY && j < Configuration.GAME_MATRIX_SIZE)))) {
+                ){
                     this.matrix[i][j] = 0;
                 }
             }
@@ -270,4 +325,36 @@ window.addEventListener('load', function () {
 
     let game = new Game()
     game.playGame(lshapedElement);
+
+    document.addEventListener('keyup',function(event){
+        event.preventDefault();
+        event.stopPropagation();
+        let key = event.key || event.keyCode;
+        if( key === 37 || key === 'ArrowLeft' ){
+            game.resume();
+        } else if(key === 39 || key === 'ArrowRight'){
+            game.resume();
+        } else if(key === 40 || key === 'ArrowDown'){
+            game.resume();
+        }
+    });
+
+    document.addEventListener('keydown',function(event){
+        event.preventDefault();
+        event.stopPropagation();
+        let key = event.key || event.keyCode;
+        if( key === 37 || key === 'ArrowLeft' ){
+            if(!game.isButtonPressed())
+                game.clear();
+            game.moveLeft();
+        } else if(key === 39 || key === 'ArrowRight'){
+            if(!game.isButtonPressed())
+                game.clear();
+            game.moveRight();
+        } else if(key === 40 || key === 'ArrowDown'){
+            if(!game.isButtonPressed())
+                game.clear();
+            game.moveDown();
+        }
+    });
 })
